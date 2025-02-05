@@ -36,15 +36,29 @@ int main()
   int user_initial_energy;
   int user_final_energy;
   std::string choice;
+
+  // Tempt variables for string checks
+  std::string input;
+  std::size_t size;
+
   // Ask user to enter atomic number
   std::cout << "Please enter the atomic number below" << '\n';
-  std::cin >> user_atomic_number;
-  while(user_atomic_number <= 0)
+  std::cin >> input;
+  while(user_atomic_number <= 0 || std::cin.fail() || input.length() != size) // Ascii clear and ignore goes through bit by bit, however the cin data type is classed it will iterate through by that size
   {
-    std::cout << "Error: The atomic number must be positive" << '\n';
-    std::cout << "Please enter atomic number below" << '\n';
-    std::cin >> user_atomic_number;
+    std::cout << "Error: The atomic number must be a positive number" << '\n';
+    std::cout << "Please enter atomic number below " << '\n'; // When user_atomic_number is set to an integer, when character is sent through iostream the integer turns to 0.
+    std::cin.clear();
+    std::cin.ignore(); // You can add amount to ignore in parameters you idiot...
+    std::cin >> input;
+    try {
+      user_atomic_number = std::stoi(input, &size);
+    } catch(const std::exception& e) {
+      std::cout << "Exception: " << e.what() << '\n';
+    }
   }
+  
+  std::cout << user_atomic_number << '\n';
   // Ask user to enter initial and final quantum numbers
   std::cout << "Please now enter the initial quantum energy "
                "state of the electron"
@@ -74,6 +88,13 @@ int main()
 
   std::cout << "Would you like to perform another calculation? (y/n): \n";
   std::cin >> choice;
+  
+  while(choice != "y" && choice != "n")
+  {
+  std::cout << "Would you like to perform another calculation? (please enter y or n): \n";
+  std::cin >> choice;
+
+  }
 
   if(choice == "y")
   {
