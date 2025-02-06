@@ -102,7 +102,7 @@ int main()
   while(ev_or_joule != 0 && ev_or_joule != 1)
   {
     std::cout << "Error: input must be either 0 or 1" << '\n';
-    int ev_or_joule = user_input_handler("Please provide the unit of measurement you would like\n0 for joules (J)\n1 for electron volts (eV)\n", "Error this is not valid input");
+    ev_or_joule = user_input_handler("Please provide the unit of measurement you would like\n0 for joules (J)\n1 for electron volts (eV)\n", "Error this is not valid input");
   }
   if(ev_or_joule == 0)
   {
