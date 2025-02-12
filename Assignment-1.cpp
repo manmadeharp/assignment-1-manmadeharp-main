@@ -51,11 +51,11 @@ int user_input_handler(std::string user_message, std::string error_message)
   } // Catch error so we may ask user for input again
 
   // std::cout << input << std::cin.fail() << input.length() << size << '\n';
-  // Check that the user inputted a positive integer, check that the number string size matches the exact size of the user input
+  // Check that the user inputted a positive integer, check that the converted number string (user_input) size matches the exact size of the user input
   while(user_input <= 0 || std::cin.fail() || input.length() != size)
   {
     std::cout << error_message << '\n';
-    std::cout << user_message << '\n'; // When user_atomic_number is set to an integer, when character is sent through iostream the integer turns to 0.
+    std::cout << user_message << '\n';
     std::cin.clear();
     std::cin.ignore(); // Clear the error and flush the input
     std::cin >> input;
