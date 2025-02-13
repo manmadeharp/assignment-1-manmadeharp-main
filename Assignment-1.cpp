@@ -44,13 +44,11 @@ int user_input_handler(std::string user_message, std::string error_message)
   try
   { // Try to convert user input to an integer, return the number of characters converted as well (size)
     user_input = std::stoi(input, &size);
-    return user_input;
   }
   catch(const std::exception& e)
   {
   } // Catch error so we may ask user for input again
 
-  // std::cout << input << std::cin.fail() << input.length() << size << '\n';
   // Check that the user inputted a positive integer, check that the converted number string (user_input) size matches the exact size of the user input
   while(user_input <= 0 || std::cin.fail() || input.length() != size)
   {
@@ -65,7 +63,6 @@ int user_input_handler(std::string user_message, std::string error_message)
     }
     catch(const std::exception& e)
     {
-      std::cout << "Exception error: " << e.what() << '\n';
     }
   }
   return user_input;
