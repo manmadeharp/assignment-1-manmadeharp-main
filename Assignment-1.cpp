@@ -21,74 +21,69 @@ double Bohr_energy_transition(int atomic_number, int initial_energy,
          energy_difference(initial_energy, final_energy);
 }
 
-double convert_joules_to_eV(double number_in_joules) {
+double joules_to_eV(double number_in_joules) {
   return number_in_joules * eV_reciprocal;
 }
 
-double convert_eV_to_joules(double number_in_eV) { return number_in_eV * eV; }
+double eV_to_joules(double number_in_eV) { return number_in_eV * eV; }
 
-// Function to handle user input errors, ensuring given input is an integer.
-int user_input_handler(std::string message, std::string error_message) {
-  // return variable
-  int user_number{0};
-  // Tempt variables for string checks
+// Function to handle user input and any errors, returns -1 if failed in an
+// unexpected way.
+int user_input_handler(std::string user_message, std::string error_message) {
+  // return variable.
+  int user_input{-1};
+  // Temporary variables for string checks.
   std::string input{""};
   std::size_t size{0};
 
-  // First attempt at user input
-  std::cout << message << '\n';
+  std::cout << user_message << '\n';
   std::cin >> input;
-  try {
-    user_number = std::stoi(input, &size);
-    return user_number;
+  try { // Try to convert user input to an integer, return the number of
+        // characters converted as well (size)
+    user_input = std::stoi(input, &size);
   } catch (const std::exception &e) {
-    std::cout << "Exception error: " << e.what() << '\n';
-  }
-  // if first attempt fails then we enter a loop until user input satisfies the
-  // requirements
+  } // Catch error so we may ask user for input again
 
-  // Check that the user inputted a positive number, check that the number
-  // string size matches the exact size of the user input
-  while (user_number <= 0 || std::cin.fail() || input.length() != size) {
+  // Check that the user inputted a positive integer, check that the converted
+  // number string (user_input) size matches the exact size of the user input
+  while (user_input <= 0 || std::cin.fail() || input.length() != size) {
     std::cout << error_message << '\n';
-    std::cout
-        << message
-        << '\n'; // When user_atomic_number is set to an integer, when character
-                 // is sent through iostream the integer turns to 0.
+    std::cout << user_message << '\n';
     std::cin.clear();
-    std::cin
-        .ignore(); // You can add amount to ignore in parameters you idiot...
+    std::cin.ignore(); // Clear the error and flush the input
     std::cin >> input;
     try {
-      user_number = std::stoi(input, &size);
+      user_input = std::stoi(input, &size);
     } catch (const std::exception &e) {
-      std::cout << "Exception error: " << e.what() << '\n';
     }
   }
-  return user_number;
+  return user_input;
 }
 
 int main() {
-  // Declare variables here
+  // Variables declared here
   int user_atomic_number;
   int user_initial_energy;
   int user_final_energy;
   std::string choice;
 
-  // Ask user to enter atomic number
+  // Introductory message
+  std::cout << "Hi there, this program is for the purposes of calculating the "
+               "energy transition of an electron using the Bohr model."
+            << '\n';
 
+  // Ask user for required parameters
   user_atomic_number =
       user_input_handler("Please enter the atomic number below",
                          "Error: This is not a positive integer");
-
   user_initial_energy =
       user_input_handler("Please enter the initial quantum energy below",
                          "Error: this is not a positive integer");
-
   user_final_energy =
       user_input_handler("Please enter the final quantum energy state below",
                          "Error: this is not a positive integer");
 
+  // Final check to ensure that the energy difference is positive.
   while (energy_difference(user_initial_energy, user_final_energy) <= 0 ||
          user_final_energy == 0 || user_initial_energy == 0) {
     std::cout << "Error: The final energy **must** be below the initial energy "
@@ -101,6 +96,7 @@ int main() {
         user_input_handler("Please enter the final quantum energy state below",
                            "Error: this is not a positive integer");
   }
+
   // Compute photon energy, Delta E = 13.6*(Z^2)*(1/n_j^2-1/n_i^2) eV
   double photon_energy = Bohr_energy_transition(
       user_atomic_number, user_initial_energy, user_final_energy);
@@ -118,7 +114,7 @@ int main() {
         "Error this is not valid input");
   }
   if (ev_or_joule == 0) {
-    photon_energy = convert_eV_to_joules(photon_energy);
+    photon_energy = eV_to_joules(photon_energy);
   }
   // Output answer
   std::cout << "Here is the photon energy: " << photon_energy << std::endl;
@@ -133,7 +129,7 @@ int main() {
   }
 
   if (choice == "y") {
-    main();
+    main(); // Recursive call to repeat
   }
 
   return 0;
